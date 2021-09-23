@@ -1,0 +1,23 @@
+.status-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.red-circle {
+  background-color: red;
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 4px;
+}
+
+.green-circle {
+  background-color: green;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 4px;
+}
