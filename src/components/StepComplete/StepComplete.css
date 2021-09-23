@@ -1,0 +1,12 @@
+.instructions {
+  display: flex;
+  align-items: center;
+}
+
+.icons {
+  display: inline-block;
+}
+
+.instructions-text {
+  margin-left: 8px;
+}

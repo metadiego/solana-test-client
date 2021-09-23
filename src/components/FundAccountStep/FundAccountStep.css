@@ -1,0 +1,16 @@
+.balance-display {
+  background-color: #eae4ff;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+}
+
+.balance-element {
+  margin: 10px 0px;
+}
+
+.balance-ammount {
+  display: inline-block;
+  color: #29254f;
+  font-weight: bold;
+}
