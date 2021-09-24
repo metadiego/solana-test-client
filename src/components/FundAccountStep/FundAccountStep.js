@@ -2,8 +2,6 @@ import './FundAccountStep.css';
 import StepComplete from '../StepComplete/StepComplete';
 import {useState, useEffect} from 'react';
 import Button from '@mui/material/Button';
-import Icon from '@mui/material/Icon';
-import { purple } from '@mui/material/colors';
 
 const FundAccountStep = ({handleClick, accountBalanceLamports}) => {
   let instructions = useState('3. Request airdrop for your account (this may take a couple of seconds).');
@@ -29,7 +27,7 @@ const FundAccountStep = ({handleClick, accountBalanceLamports}) => {
       <div className="balance-display">
         <div className="balance-element">Account Balance (lamports):
           {isLoading
-            ? 'Loading...'
+            ? ' Loading...'
             : <div className="balance-ammount">{accountBalanceLamports ? accountBalanceLamports : 0}</div>
           }
         </div>

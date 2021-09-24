@@ -44,3 +44,11 @@ export async function fundAccountWithLamports(
   }
   throw new Error(`Airdrop of ${lamports} failed`);
 }
+
+export async function checkProgramDeployment(programId) {
+  const connection = new solanaWeb3.Connection(SOLANA_DEVNET_URL, 'confirmed');
+  const publicKey = new solanaWeb3.PublicKey(programId);
+  const programInfo = await connection.getAccountInfo(publicKey);
+  console.log(`Program successfully deployed to Solana Dev Net:`);
+  console.log(programInfo);
+}

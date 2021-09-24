@@ -1,0 +1,26 @@
+.program-deployment-display {
+  background-color: #eae4ff;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+}
+
+.program-id-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.program-id-input-text {
+  margin: 0 10px;
+}
+
+.green-text {
+  color: green;
+  font-weight: bold;
+}
+
+.red-text {
+  color: red;
+  font-weight: bold;
+}

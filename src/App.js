@@ -1,11 +1,12 @@
 import './App.css';
 import React from 'react';
-import {establishConnection, generateKeyPair, fundAccountWithLamports} from './solanaClient.js';
+import {establishConnection, generateKeyPair, fundAccountWithLamports, checkProgramDeployment} from './solanaClient.js';
 
 import NetworkConnectionStatus from './components/NetworkConnectionStatus/NetworkConnectionStatus';
 import GenerateKeyPairStep from './components/GenerateKeyPairStep/GenerateKeyPairStep';
 import StepComplete from './components/StepComplete/StepComplete';
 import FundAccountStep from './components/FundAccountStep/FundAccountStep';
+import CheckProgramDeployment from './components/CheckProgramDeployment/CheckProgramDeployment';
 
 class App extends React.Component {
 
@@ -33,12 +34,17 @@ class App extends React.Component {
   }
 
   async handleFundAccount() {
-    if (this.state.connection === null
-      || this.state.keypair.publicKey === null) {
+    if (this.state.connection == null
+      || this.state.keypair.publicKey == null) {
       return;
     }
     let accountBalance = await fundAccountWithLamports(this.state.connection, this.state.keypair.publicKey);
     this.setState({...this.state, accountBalanceLamports: accountBalance});
+  }
+
+  async handleCheckProgramDeployment(programId) {
+    await checkProgramDeployment(programId);
+    this.setState({...this.state, programId: programId})
   }
 
   render() {
@@ -55,7 +61,7 @@ class App extends React.Component {
           <h2>To interact with your smart contract please follow the steps
           below, in order:</h2>
           <StepComplete
-            isComplete={this.state.connection !== null}
+            isComplete={!!this.state.connection}
             instructions="1. Verify Devnet Connection Status = SUCCESS. (ERROR indicates that Solana Dev Cluster is down)."/>
           <GenerateKeyPairStep
             handleClick={() => this.handleGenerateKeyPair()}
@@ -63,6 +69,9 @@ class App extends React.Component {
           <FundAccountStep
             accountBalanceLamports={this.state.accountBalanceLamports ? this.state.accountBalanceLamports : 0}
             handleClick={() => this.handleFundAccount()}/>
+          <CheckProgramDeployment
+            isProgramDeployed={!!this.state.programId}
+            handleClick={(id) => this.handleCheckProgramDeployment(id)}/>
         </div>
       </div>
     );
