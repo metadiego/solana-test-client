@@ -25,11 +25,16 @@ class App extends React.Component {
 
   async handleGenerateKeyPair() {
     let keypair = await generateKeyPair();
-    this.setState({...this.state, keypair: keypair});
+    this.setState({
+      connection: this.state.connection,
+      version: this.state.version,
+      keypair: keypair
+    });
   }
 
   async handleFundAccount() {
-    if (this.state.connection === null || this.state.keypair.publicKey === null) {
+    if (this.state.connection === null
+      || this.state.keypair.publicKey === null) {
       return;
     }
     let accountBalance = await fundAccountWithLamports(this.state.connection, this.state.keypair.publicKey);
@@ -50,13 +55,13 @@ class App extends React.Component {
           <h2>To interact with your smart contract please follow the steps
           below, in order:</h2>
           <StepComplete
-            isComplete={this.state.connection != null}
+            isComplete={this.state.connection !== null}
             instructions="1. Verify Devnet Connection Status = SUCCESS. (ERROR indicates that Solana Dev Cluster is down)."/>
           <GenerateKeyPairStep
             handleClick={() => this.handleGenerateKeyPair()}
             keypair={this.state.keypair ? this.state.keypair : {}}/>
           <FundAccountStep
-            accountBalance={fundAccountWithLamports}
+            accountBalanceLamports={this.state.accountBalanceLamports ? this.state.accountBalanceLamports : 0}
             handleClick={() => this.handleFundAccount()}/>
         </div>
       </div>

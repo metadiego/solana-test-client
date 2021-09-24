@@ -14,4 +14,7 @@
   display: inline-block;
   color: #29254f;
   font-weight: bold;
+  max-width: 90vw;
+  word-wrap: break-word;
+  margin-top: 5px;
 }

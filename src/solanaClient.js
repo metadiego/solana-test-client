@@ -13,36 +13,28 @@ export async function establishConnection(): Promise<void> {
   let connection = new solanaWeb3.Connection(SOLANA_DEVNET_URL, 'singleGossip');
   const version = await connection.getVersion();
   console.log('Connection to cluster established:', version);
-  return connection;
+  return {connection, version};
 }
 
 export async function generateKeyPair() {
   const keypair = solanaWeb3.Keypair.generate();
-  const publicKey = keypair?.publicKey.toString();
-  const privateKey = JSON.stringify(Array.from(keypair.secretKey));
   console.log('KeyPair successfully generated');
-  return {publicKey: 'publicKey', privateKey: 'privateKey'};
-}
-
-export async function fundAccount() {
-  const keypair = solanaWeb3.Keypair.generate();
-  console.log('KeyPair successfully generated');
-  return {publicKey: 'publicKey', privateKey: 'privateKey'};
+  return {publicKey: keypair?.publicKey, privateKey: keypair?.secretKey};
 }
 
 export async function fundAccountWithLamports(
   connection: Connection,
   publicKey,
-  lamports = 1000000,
+  lamports = 10000000,
 ): Promise<Account> {
-  const account = new Account();
 
   let retries = 10;
   await connection.requestAirdrop(publicKey, lamports);
   for (;;) {
-    await delay(1000);
+    await delay(5000);
     let accountBalance = (await connection.getBalance(publicKey))
-    if (lamports < accountBalance) {
+    if (lamports <= accountBalance) {
+      console.log(`Account funded with ${accountBalance}`);
       return accountBalance;
     }
     if (--retries <= 0) {
