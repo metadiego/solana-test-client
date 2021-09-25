@@ -21,7 +21,6 @@ const GetAccountInfoStep = ({connection}) => {
         owner: info.owner.toString()});
       if (!!info.data) {
         setRawAccountData(info.data);
-        console.log(info.data);
         // setProcessedAccountData(borsh.deserialize(
         //   TargetAccountShema,
         //   TargetAccount,

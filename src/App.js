@@ -63,11 +63,12 @@ class App extends React.Component {
     });
   }
 
-  async handleCreateAccount(accountBalance, programId, spaceAllocation) {
+  async handleCreateAccount(accountBalance, programId, spaceInBytes) {
     let keypair = await generateKeyPair();
     let newAccount = {};
-    if (!!programId || !!spaceAllocation) {
-      // newAccount = {keypair: keypair, balance: balance, programId: programId};
+    if (!!programId || !!spaceInBytes) {
+      // TODO: add logic to create an account owned by a program.
+      // newAccount = {keypair: keypair, balance: balance, programId: programId, spaceInBytes: spaceInBytes};
     } else {
       let balance = await fundAccountWithLamports(this.state.connection, keypair.publicKey, accountBalance);
       newAccount = {keypair: keypair, balance: balance};
@@ -110,7 +111,7 @@ class App extends React.Component {
                 <GetAccountInfoStep connection={this.state.connection}/>
               </TabPanel>
               <TabPanel value={this.state.tabValue} index={2}>
-                <TokenTransactionStep />
+                <TokenTransactionStep connection={this.state.connection}/>
               </TabPanel>
             </Box>
         </div>

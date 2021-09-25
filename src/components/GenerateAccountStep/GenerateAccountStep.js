@@ -15,8 +15,8 @@ const GenerateAccountStep = ({handleCreateAccount, accounts}) => {
     setAccountData({...accountData, programId: programId})
   }
 
-  const setAccountSpace = (space) => {
-    setAccountData({...accountData, space: space})
+  const setAccountSpaceBytes = (space) => {
+    setAccountData({...accountData, spaceInBytes: space})
   }
 
   const handleGenerateAccount = () => {
@@ -43,7 +43,7 @@ const GenerateAccountStep = ({handleCreateAccount, accounts}) => {
             that will be used by a program for storage):</p>
           <div>
             <div className="account-input-field">
-              <div className="account-input-descriptor">Program ID (leave blank if none):</div>
+              <div className="account-input-descriptor">Program ID which owns this account (leave blank if none):</div>
               <TextField
                 fullWidth
                 size="dense"
@@ -53,14 +53,14 @@ const GenerateAccountStep = ({handleCreateAccount, accounts}) => {
                 onChange={(evt) => setAccountProgramId(evt.target.value)}/>
             </div>
             <div className="account-input-field">
-              <div className="account-input-descriptor">Space to allocate to this account (leave blank if none):</div>
+              <div className="account-input-descriptor">Space (in bytes) to allocate to this account (leave blank if none):</div>
               <TextField
                 fullWidth
                 size="dense"
-                label="Account Space (Optional)"
+                label="Account Space in Bytes (Optional)"
                 variant="outlined"
                 margin="normal"
-                onChange={(evt) => setAccountSpace(evt.target.value)}/>
+                onChange={(evt) => setAccountSpaceBytes(evt.target.value)}/>
             </div>
           </div>
         </div>

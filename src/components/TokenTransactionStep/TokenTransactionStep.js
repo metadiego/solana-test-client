@@ -4,14 +4,14 @@ import {useState} from 'react';
 import TextField from '@mui/material/TextField';
 import {transfer} from '../../solanaClient.js';
 
-const TokenTransactionStep = ({handleTransfer}) => {
+const TokenTransactionStep = ({connection}) => {
   let [fromPublicKey, setFromPublicKey] = useState(0);
   let [fromPrivateKey, setFromPrivateKey] = useState(0);
   let [toPublicKey, setToPublicKey] = useState(0);
   let [ammount, setAmmount] = useState(0);
 
   const handleInitiateTransfer = () => {
-    transfer(fromPublicKey, fromPrivateKey, toPublicKey, ammount);
+    transfer(connection, fromPublicKey, fromPrivateKey, toPublicKey, ammount);
   }
 
   return (
@@ -33,7 +33,7 @@ const TokenTransactionStep = ({handleTransfer}) => {
                 required
                 fullWidth
                 size="dense"
-                label="Private Key"
+                label="Private Key (will be cast to Javascript Uint8Array)"
                 variant="outlined"
                 margin="normal"
                 onChange={(evt) => setFromPrivateKey(evt.target.value)}/>

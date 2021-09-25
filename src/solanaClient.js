@@ -50,25 +50,26 @@ export async function getAccountInfo(connection: Connection, programId: string) 
  * Transfer lamports between accounts.
  */
 export async function transfer(
-  fromPublicKey: solanaWeb3.PublicKey,
-  fromPrivateKey: solanaWeb3.PrivateKey,
-  toPublicKey: solanaWeb3.PublicKey,
+  connection: solanaWeb3.Connection,
+  fromPublicKeyString: string,
+  fromPrivateKeyString: string,
+  toPublicKeyString: string,
   lamports) {
-  const connection = new solanaWeb3.Connection(SOLANA_DEVNET_URL, 'confirmed');
+  const fromPublicKey = solanaWeb3.PublicKey(fromPublicKeyString);
+  const fromPrivateKey = Uint8Array.from(fromPrivateKey);
+  const toPublicKey = solanaWeb3.PublicKey(toPublicKeyString);
   const instructions = solanaWeb3.SystemProgram.transfer({
     fromPublicKey,
-    toPublicKey,
+    toPublicKeyString,
     lamports,
   });
-
   const signers = [
     {
       publicKey: fromPublicKey,
       fromPrivateKey,
     },
   ];
-
   const transaction = new solanaWeb3.Transaction().add(instructions);
-
   const hash = await connection.sendTransaction(transaction, signers);
+  return hash;
 }
