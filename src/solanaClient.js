@@ -4,8 +4,6 @@ import {Account, Connection} from '@solana/web3.js';
 
 let SOLANA_DEVNET_URL = 'https://api.devnet.solana.com';
 
-const delay = ms => new Promise(res => setTimeout(res, ms));
-
 /**
  * Establish a connection to the cluster
  */

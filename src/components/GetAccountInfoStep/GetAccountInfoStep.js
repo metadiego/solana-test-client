@@ -3,13 +3,14 @@ import Button from '@mui/material/Button';
 import './GetAccountInfoStep.css';
 import TextField from '@mui/material/TextField';
 import {getAccountInfo} from '../../solanaClient.js';
-import {TargetAccount, TargetAccountShema} from './AccountDataSpec';
-import * as borsh from 'borsh';
+// import {TargetAccount, TargetAccountShema} from './AccountDataSpec';
+// import * as borsh from 'borsh';
 
 const GetAccountInfoStep = ({connection}) => {
   let [id, setId] = useState('');
   let [accountInfo, setAccountInfo] = useState({});
-  let [processedAccountData, setProcessAccountData] = useState({});
+  let [rawAccountData, setRawAccountData] = useState({});
+  // let [processedAccountData, setProcessedAccountData] = useState({});
 
   const handleGetAccountInfo = async () => {
     try {
@@ -19,11 +20,13 @@ const GetAccountInfoStep = ({connection}) => {
         balance: info.lamports,
         owner: info.owner.toString()});
       if (!!info.data) {
-        setProcessAccountData(borsh.deserialize(
-          TargetAccountShema,
-          TargetAccount,
-          accountInfo.data,
-        ));
+        setRawAccountData(info.data);
+        console.log(info.data);
+        // setProcessedAccountData(borsh.deserialize(
+        //   TargetAccountShema,
+        //   TargetAccount,
+        //   accountInfo.data,
+        // ));
       }
     } catch {
       setAccountInfo({notExists: true});
@@ -64,14 +67,21 @@ const GetAccountInfoStep = ({connection}) => {
              )
            }
         </div>
-      }
-      {!!processedAccountData && <div className="account-data-panel">
+        }
+      {Object.keys(rawAccountData).length > 0 && <div className="account-data-panel">
         <h4>Account Data:</h4>
-         <p>TODO:specify how you would like to render the account data. You must
-          modify ./AccountDataSpec to specify how to desiralize the account.
-          Then the variable 'processedAccountData' will contain the Information
-          of the deserialized object.
-         </p>
+         <p>It seems like the account you have entered contains serialized data
+         stored in it's data field. In order to view it, you must:</p>
+         <ul>
+           <li> Modify TargetAccount and TargetAccountShema to match the spec of
+           the serialized data.</li>
+           <li>Uncommend line 6-7.</li>
+           <li>Uncommend line 13.</li>
+           <li>Uncommend line 24-28.</li>
+           <li>Once you complete the above steps, this template will expose the
+           data object through 'processedAccountData'. You can render this data
+           as you see fit.</li>
+         </ul>
       </div>
       }
     </div>
