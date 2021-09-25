@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import NetworkConnectionStatus from './components/NetworkConnectionStatus/NetworkConnectionStatus';
 import GenerateAccountStep from './components/GenerateAccountStep/GenerateAccountStep';
 import GetAccountInfoStep from './components/GetAccountInfoStep/GetAccountInfoStep';
-import TransferStep from './components/TransferStep/TransferStep';
+import TokenTransactionStep from './components/TokenTransactionStep/TokenTransactionStep';
 import {establishConnection, generateKeyPair, fundAccountWithLamports} from './solanaClient.js';
 
 /// Holds the contents of a single tab.
@@ -67,11 +67,9 @@ class App extends React.Component {
     let keypair = await generateKeyPair();
     let newAccount = {};
     if (!!programId || !!spaceAllocation) {
-      let balance = 0;
       // newAccount = {keypair: keypair, balance: balance, programId: programId};
     } else {
-      // let balance = await fundAccountWithLamports(this.state.connection, keypair.publicKey, accountBalance);
-      let balance = 0;
+      let balance = await fundAccountWithLamports(this.state.connection, keypair.publicKey, accountBalance);
       newAccount = {keypair: keypair, balance: balance};
     }
     this.setState({
@@ -99,8 +97,8 @@ class App extends React.Component {
                 <Tabs value={this.state.tabValue}
                   onChange={(evt, newValue) => this.handleTabChange(evt, newValue)}>
                   <Tab label="Create Account" />
-                  <Tab label="Transfer" />
                   <Tab label="Get Account Information" />
+                  <Tab label="Token Transaction" />
                 </Tabs>
               </Box>
               <TabPanel value={this.state.tabValue} index={0}>
@@ -109,13 +107,10 @@ class App extends React.Component {
                   accounts={this.state.accounts}/>
               </TabPanel>
               <TabPanel value={this.state.tabValue} index={1}>
-                <TransferStep />
-              </TabPanel>
-              <TabPanel value={this.state.tabValue} index={2}>
                 <GetAccountInfoStep connection={this.state.connection}/>
               </TabPanel>
-              <TabPanel value={this.state.tabValue} index={3}>
-                <GetAccountInfoStep/>
+              <TabPanel value={this.state.tabValue} index={2}>
+                <TokenTransactionStep />
               </TabPanel>
             </Box>
         </div>

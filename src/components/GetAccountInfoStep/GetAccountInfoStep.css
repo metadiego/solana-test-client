@@ -24,12 +24,10 @@
   margin: 0 10px;
 }
 
-.green-text {
-  color: green;
-  font-weight: bold;
-}
-
-.red-text {
-  color: red;
-  font-weight: bold;
+.account-data-panel {
+  background-color: #badabf;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  margin: 15px 0;
 }

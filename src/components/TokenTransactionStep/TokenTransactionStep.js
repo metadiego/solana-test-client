@@ -1,10 +1,10 @@
 import Button from '@mui/material/Button';
-import './TransferStep.css';
+import './TokenTransactionStep.css';
 import {useState} from 'react';
 import TextField from '@mui/material/TextField';
 import {transfer} from '../../solanaClient.js';
 
-const TransferBalanceStep = ({handleTransfer}) => {
+const TokenTransactionStep = ({handleTransfer}) => {
   let [fromPublicKey, setFromPublicKey] = useState(0);
   let [fromPrivateKey, setFromPrivateKey] = useState(0);
   let [toPublicKey, setToPublicKey] = useState(0);
@@ -16,7 +16,7 @@ const TransferBalanceStep = ({handleTransfer}) => {
 
   return (
     <div>
-      <p>Transfer between accounts:</p>
+      <p>Transfer tokens between accounts:</p>
       <div className="transfer-creation-panel">
         <div className="transfer-creation-panel-inputs">
           <div className="transfer-input-field">
@@ -25,7 +25,6 @@ const TransferBalanceStep = ({handleTransfer}) => {
               required
               fullWidth
               size="dense"
-              id="outlined-basic"
               label="Public Key"
               variant="outlined"
               margin="normal"
@@ -34,7 +33,6 @@ const TransferBalanceStep = ({handleTransfer}) => {
                 required
                 fullWidth
                 size="dense"
-                id="outlined-basic"
                 label="Private Key"
                 variant="outlined"
                 margin="normal"
@@ -69,4 +67,4 @@ const TransferBalanceStep = ({handleTransfer}) => {
   )
 }
 
-export default TransferBalanceStep;
+export default TokenTransactionStep;
