@@ -10,45 +10,67 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
  * Establish a connection to the cluster
  */
 export async function establishConnection(): Promise<void> {
-  let connection = new solanaWeb3.Connection(SOLANA_DEVNET_URL, 'singleGossip');
+  let connection = new solanaWeb3.Connection(SOLANA_DEVNET_URL, 'confirmed');
   const version = await connection.getVersion();
   console.log('Connection to cluster established:', version);
   return {connection, version};
 }
 
-export async function generateKeyPair() {
+/**
+ * Generate public/private key pair to use in an Account.
+ */
+export function generateKeyPair() {
   const keypair = solanaWeb3.Keypair.generate();
   console.log('KeyPair successfully generated');
   return {publicKey: keypair?.publicKey, privateKey: keypair?.secretKey};
 }
 
+/**
+ * Airdrop lamports to an account.
+ */
 export async function fundAccountWithLamports(
-  connection: Connection,
-  publicKey,
+  connection: solanaWeb3.Connection,
+  publicKey: solanaWeb3.PublicKey,
   lamports = 10000000,
 ): Promise<Account> {
-
-  let retries = 10;
-  await connection.requestAirdrop(publicKey, lamports);
-  for (;;) {
-    await delay(5000);
-    let accountBalance = (await connection.getBalance(publicKey))
-    if (lamports <= accountBalance) {
-      console.log(`Account funded with ${accountBalance}`);
-      return accountBalance;
-    }
-    if (--retries <= 0) {
-      break;
-    }
-    console.log(`Airdrop retry ${retries}`);
-  }
-  throw new Error(`Airdrop of ${lamports} failed`);
+  const hash = await connection.requestAirdrop(publicKey, lamports);
+  await connection.confirmTransaction(hash);
+  let accountBalance = (await connection.getBalance(publicKey));
+  console.log(`Account funded with ${accountBalance}`);
 }
 
-export async function checkProgramDeployment(programId) {
-  const connection = new solanaWeb3.Connection(SOLANA_DEVNET_URL, 'confirmed');
+/**
+ * Fetch information associated with an account.
+ */
+export async function getAccountInfo(connection: Connection, programId: string) {
   const publicKey = new solanaWeb3.PublicKey(programId);
-  const programInfo = await connection.getAccountInfo(publicKey);
-  console.log(`Program successfully deployed to Solana Dev Net:`);
-  console.log(programInfo);
+  const accountInfo = await connection.getAccountInfo(publicKey);
+  return accountInfo;
+}
+
+/**
+ * Transfer lamports between accounts.
+ */
+export async function transfer(
+  fromPublicKey: solanaWeb3.PublicKey,
+  fromPrivateKey: solanaWeb3.PrivateKey,
+  toPublicKey: solanaWeb3.PublicKey,
+  lamports) {
+  const connection = new solanaWeb3.Connection(SOLANA_DEVNET_URL, 'confirmed');
+  const instructions = solanaWeb3.SystemProgram.transfer({
+    fromPublicKey,
+    toPublicKey,
+    lamports,
+  });
+
+  const signers = [
+    {
+      publicKey: fromPublicKey,
+      fromPrivateKey,
+    },
+  ];
+
+  const transaction = new solanaWeb3.Transaction().add(instructions);
+
+  const hash = await connection.sendTransaction(transaction, signers);
 }

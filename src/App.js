@@ -1,50 +1,85 @@
 import './App.css';
 import React from 'react';
-import {establishConnection, generateKeyPair, fundAccountWithLamports, checkProgramDeployment} from './solanaClient.js';
+
+import PropTypes from 'prop-types';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
 
 import NetworkConnectionStatus from './components/NetworkConnectionStatus/NetworkConnectionStatus';
-import GenerateKeyPairStep from './components/GenerateKeyPairStep/GenerateKeyPairStep';
-import StepComplete from './components/StepComplete/StepComplete';
-import FundAccountStep from './components/FundAccountStep/FundAccountStep';
-import CheckProgramDeployment from './components/CheckProgramDeployment/CheckProgramDeployment';
+import GenerateAccountStep from './components/GenerateAccountStep/GenerateAccountStep';
+import GetAccountInfoStep from './components/GetAccountInfoStep/GetAccountInfoStep';
+import TransferStep from './components/TransferStep/TransferStep';
+import {establishConnection, generateKeyPair, fundAccountWithLamports} from './solanaClient.js';
+
+/// Holds the contents of a single tab.
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
 
 class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {tabValue: 0};
   }
+
+  handleTabChange(event, newValue) {
+    this.setState({
+      ...this.state,
+      tabValue: newValue,
+    });
+  };
 
   // Establish a connection with Solana Dev Network on page load.
   async componentDidMount() {
     let {connection, version} = await establishConnection();
     this.setState({
+      tabValue: this.state.tabValue,
       connection: connection,
       version: version
     });
   }
 
-  async handleGenerateKeyPair() {
+  async handleCreateAccount(accountBalance, programId, spaceAllocation) {
     let keypair = await generateKeyPair();
+    let newAccount = {};
+    if (!!programId || !!spaceAllocation) {
+      let balance = 0;
+      // newAccount = {keypair: keypair, balance: balance, programId: programId};
+    } else {
+      // let balance = await fundAccountWithLamports(this.state.connection, keypair.publicKey, accountBalance);
+      let balance = 0;
+      newAccount = {keypair: keypair, balance: balance};
+    }
     this.setState({
+      tabValue: this.state.tabValue,
       connection: this.state.connection,
       version: this.state.version,
-      keypair: keypair
+      accounts: !!this.state.accounts ? this.state.accounts.concat(newAccount) : [newAccount]
     });
-  }
-
-  async handleFundAccount() {
-    if (this.state.connection == null
-      || this.state.keypair.publicKey == null) {
-      return;
-    }
-    let accountBalance = await fundAccountWithLamports(this.state.connection, this.state.keypair.publicKey);
-    this.setState({...this.state, accountBalanceLamports: accountBalance});
-  }
-
-  async handleCheckProgramDeployment(programId) {
-    await checkProgramDeployment(programId);
-    this.setState({...this.state, programId: programId})
   }
 
   render() {
@@ -58,25 +93,35 @@ class App extends React.Component {
             connection={this.state.connection}
             version={this.state.version}
           />
-          <h2>To interact with your smart contract please follow the steps
-          below, in order:</h2>
-          <StepComplete
-            isComplete={!!this.state.connection}
-            instructions="1. Verify Devnet Connection Status = SUCCESS. (ERROR indicates that Solana Dev Cluster is down)."/>
-          <GenerateKeyPairStep
-            handleClick={() => this.handleGenerateKeyPair()}
-            keypair={this.state.keypair ? this.state.keypair : {}}/>
-          <FundAccountStep
-            accountBalanceLamports={this.state.accountBalanceLamports ? this.state.accountBalanceLamports : 0}
-            handleClick={() => this.handleFundAccount()}/>
-          <CheckProgramDeployment
-            isProgramDeployed={!!this.state.programId}
-            handleClick={(id) => this.handleCheckProgramDeployment(id)}/>
+          <h2>Each tab exposes different utility methods to interact with the Solana Blockchain:</h2>
+            <Box sx={{ width: '100%' }}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs value={this.state.tabValue}
+                  onChange={(evt, newValue) => this.handleTabChange(evt, newValue)}>
+                  <Tab label="Create Account" />
+                  <Tab label="Transfer" />
+                  <Tab label="Get Account Information" />
+                </Tabs>
+              </Box>
+              <TabPanel value={this.state.tabValue} index={0}>
+                <GenerateAccountStep
+                  handleCreateAccount={(balance) => this.handleCreateAccount(balance)}
+                  accounts={this.state.accounts}/>
+              </TabPanel>
+              <TabPanel value={this.state.tabValue} index={1}>
+                <TransferStep />
+              </TabPanel>
+              <TabPanel value={this.state.tabValue} index={2}>
+                <GetAccountInfoStep connection={this.state.connection}/>
+              </TabPanel>
+              <TabPanel value={this.state.tabValue} index={3}>
+                <GetAccountInfoStep/>
+              </TabPanel>
+            </Box>
         </div>
       </div>
     );
   }
-
 }
 
 export default App;

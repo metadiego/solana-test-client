@@ -1,17 +1,26 @@
-.program-deployment-display {
+.account-info-display {
   background-color: #eae4ff;
   align-items: center;
   justify-content: center;
   padding: 15px;
 }
 
-.program-id-input {
+.account-info-panel {
+  background-color: #cedde2;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  margin: 15px 0;
+}
+
+.account-public-key-input {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.program-id-input-text {
+.account-public-key-input-text {
+  min-width: 50vw;
   margin: 0 10px;
 }
 

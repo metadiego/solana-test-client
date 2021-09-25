@@ -1,0 +1,28 @@
+.account-creation-panel {
+  background-color: #eae4ff;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.account-advanced-options {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.account-input-field {
+  display: inline-block;
+  font-size: 14px;
+  max-width: 200px;
+  min-width: 35vw;
+  margin-right: 20px;
+}
+
+.create-account-button {
+  display: block;
+  align-self: center;
+  margin-top: 20px;
+}

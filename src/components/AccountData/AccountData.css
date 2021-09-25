@@ -1,0 +1,21 @@
+.account-container {
+  display: flex;
+  align-items: column;
+  justify-content: space-between;
+  background-color: #cedde2;
+  margin: 10px 0;
+  padding: 10px;
+  flex-wrap: wrap;
+}
+
+.account-element {
+  max-width: 25vw;
+  width: 25vw;
+  margin-top: 10px 20px 10px 0;
+  cursor: pointer;
+}
+
+.account-element-value {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
