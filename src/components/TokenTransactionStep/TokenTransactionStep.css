@@ -2,12 +2,14 @@
   background-color: #eae4ff;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   padding: 10px;
 }
 
 .transfer-creation-panel-inputs {
   display: flex;
   justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .transfer-input-field {

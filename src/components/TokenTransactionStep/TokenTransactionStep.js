@@ -1,6 +1,7 @@
 import Button from '@mui/material/Button';
 import './TokenTransactionStep.css';
-import {useState} from 'react';
+import LoadingButton from '../LoadingButton/LoadingButton.js';
+import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import {transfer} from '../../solanaClient.js';
 
@@ -13,8 +14,8 @@ const TokenTransactionStep = ({connection}) => {
   const parsePrivateKey = (privateKeyString) =>
     setFromPrivateKey(Uint8Array.from(privateKeyString.split(',')));
 
-  const handleInitiateTransfer = () => {
-    transfer(connection, fromPublicKey, fromPrivateKey, toPublicKey, ammount);
+  const handleInitiateTransfer = async () => {
+    await transfer(connection, fromPublicKey, fromPrivateKey, toPublicKey, ammount);
   }
 
   return (
@@ -60,10 +61,9 @@ const TokenTransactionStep = ({connection}) => {
           </div>
         </div>
         <div className="transfer-button">
-          <Button
-            size="large"
-            variant="outlined"
-            onClick={() => handleInitiateTransfer()}>Transfer</Button>
+          <LoadingButton
+            buttonLabel = "Transfer"
+            handleClick = {() => handleInitiateTransfer()}/>
         </div>
       </div>
   </div>
