@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import { green, purple, blue } from '@mui/material/colors';
+import { purple } from '@mui/material/colors';
 import Button from '@mui/material/Button';
 
 const LoadingButton = ({buttonLabel, handleClick}) => {
@@ -11,7 +11,7 @@ const LoadingButton = ({buttonLabel, handleClick}) => {
 
   const buttonSx = {
     ...(success && {
-      bgcolor: blue[100],
+      bgcolor: purple[100],
     }),
   };
 

@@ -1,8 +1,8 @@
-import Button from '@mui/material/Button';
 import './GenerateAccountStep.css';
 import AccountData from '../AccountData/AccountData';
 import {useState} from 'react';
 import TextField from '@mui/material/TextField';
+import LoadingButton from '../LoadingButton/LoadingButton.js';
 
 const GenerateAccountStep = ({handleCreateAccount, accounts}) => {
   let [accountData, setAccountData] = useState({});
@@ -19,8 +19,8 @@ const GenerateAccountStep = ({handleCreateAccount, accounts}) => {
     setAccountData({...accountData, spaceInBytes: space})
   }
 
-  const handleGenerateAccount = () => {
-    handleCreateAccount(parseInt(accountData.balance));
+  const handleGenerateAccount = async () => {
+    await handleCreateAccount(parseInt(accountData.balance));
   }
 
   return (
@@ -65,11 +65,9 @@ const GenerateAccountStep = ({handleCreateAccount, accounts}) => {
           </div>
         </div>
         <div className="create-account-button">
-          <Button
-            size="large"
-            variant="outlined"
-            margin="normal"
-            onClick={() => handleGenerateAccount()}>Generate Account</Button>
+          <LoadingButton
+            buttonLabel = "Generate Account"
+            handleClick={() => handleGenerateAccount()} />
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import Button from '@mui/material/Button';
+import LoadingButton from '../LoadingButton/LoadingButton.js';
 import './GetAccountInfoStep.css';
 import TextField from '@mui/material/TextField';
 import {getAccountInfo} from '../../solanaClient.js';
@@ -46,12 +46,9 @@ const GetAccountInfoStep = ({connection}) => {
                 variant="outlined"
                 onChange={(evt) => setId(evt.target.value)}/>
             </span>
-            <Button
-              size="large"
-              variant="outlined"
-              onClick={() => handleGetAccountInfo()}>
-                Get Info
-            </Button>
+            <LoadingButton
+              buttonLabel = "Generate Account"
+              handleClick={() => handleGetAccountInfo()} />
           </div>
         </div>
         {Object.keys(accountInfo).length > 0 && <div className="account-info-panel">
