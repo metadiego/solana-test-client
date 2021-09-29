@@ -2,13 +2,12 @@ import * as solanaWeb3 from '@solana/web3.js';
 
 import {Account, Connection} from '@solana/web3.js';
 
-let SOLANA_DEVNET_URL = 'https://api.devnet.solana.com';
-
 /**
  * Establish a connection to the cluster
  */
-export async function establishConnection(): Promise<void> {
-  let connection = new solanaWeb3.Connection(SOLANA_DEVNET_URL, 'confirmed');
+export async function establishConnection(url): Promise<void> {
+  console.log(url);
+  let connection = new solanaWeb3.Connection(url, 'confirmed');
   const version = await connection.getVersion();
   console.log('Connection to cluster established:', version);
   return {connection, version};
@@ -35,6 +34,7 @@ export async function fundAccountWithLamports(
   await connection.confirmTransaction(hash);
   let accountBalance = (await connection.getBalance(publicKey));
   console.log(`Account funded with ${accountBalance}`);
+  return accountBalance;
 }
 
 /**
@@ -52,15 +52,14 @@ export async function getAccountInfo(connection: Connection, programId: string) 
 export async function transfer(
   connection: solanaWeb3.Connection,
   fromPublicKeyString: string,
-  fromPrivateKeyString: string,
+  fromPrivateKey: Uint8Array,
   toPublicKeyString: string,
   lamports) {
-  const fromPublicKey = solanaWeb3.PublicKey(fromPublicKeyString);
-  const fromPrivateKey = Uint8Array.from(fromPrivateKey);
-  const toPublicKey = solanaWeb3.PublicKey(toPublicKeyString);
+  const fromPublicKey = new solanaWeb3.PublicKey(fromPublicKeyString);
+  const toPublicKey = new solanaWeb3.PublicKey(toPublicKeyString);
   const instructions = solanaWeb3.SystemProgram.transfer({
     fromPublicKey,
-    toPublicKeyString,
+    toPublicKey,
     lamports,
   });
   const signers = [
@@ -70,6 +69,6 @@ export async function transfer(
     },
   ];
   const transaction = new solanaWeb3.Transaction().add(instructions);
-  const hash = await connection.sendTransaction(transaction, signers);
+  const hash = await solanaWeb3.sendAndConfirmTransaction(transaction, signers);
   return hash;
 }

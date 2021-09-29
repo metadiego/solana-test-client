@@ -1,0 +1,20 @@
+.input-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.input-options {
+  display: inline;
+  margin-right: 5px;
+  width: 20vw;
+}
+
+.text-input-field {
+  margin: 0 5px;
+  width: 60vw;
+}
+
+.connect-button {
+  margin: 0 5px;
+}

@@ -5,10 +5,13 @@ import TextField from '@mui/material/TextField';
 import {transfer} from '../../solanaClient.js';
 
 const TokenTransactionStep = ({connection}) => {
-  let [fromPublicKey, setFromPublicKey] = useState(0);
-  let [fromPrivateKey, setFromPrivateKey] = useState(0);
-  let [toPublicKey, setToPublicKey] = useState(0);
+  let [fromPublicKey, setFromPublicKey] = useState('');
+  let [fromPrivateKey, setFromPrivateKey] = useState('');
+  let [toPublicKey, setToPublicKey] = useState('');
   let [ammount, setAmmount] = useState(0);
+
+  const parsePrivateKey = (privateKeyString) =>
+    setFromPrivateKey(Uint8Array.from(privateKeyString.split(',')));
 
   const handleInitiateTransfer = () => {
     transfer(connection, fromPublicKey, fromPrivateKey, toPublicKey, ammount);
@@ -33,10 +36,10 @@ const TokenTransactionStep = ({connection}) => {
                 required
                 fullWidth
                 size="dense"
-                label="Private Key (will be cast to Javascript Uint8Array)"
+                label="Private Key (expects comma separated list of 8 bit ints, eg: 12,233,123)"
                 variant="outlined"
                 margin="normal"
-                onChange={(evt) => setFromPrivateKey(evt.target.value)}/>
+                onChange={(evt) => parsePrivateKey(evt.target.value)}/>
               <TextField
                 fullWidth
                 size="dense"

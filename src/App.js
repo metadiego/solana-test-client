@@ -7,6 +7,8 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 
 import NetworkConnectionStatus from './components/NetworkConnectionStatus/NetworkConnectionStatus';
+import NetworkSelectionStep from './components/NetworkSelectionStep/NetworkSelectionStep';
+
 import GenerateAccountStep from './components/GenerateAccountStep/GenerateAccountStep';
 import GetAccountInfoStep from './components/GetAccountInfoStep/GetAccountInfoStep';
 import TokenTransactionStep from './components/TokenTransactionStep/TokenTransactionStep';
@@ -53,9 +55,8 @@ class App extends React.Component {
     });
   };
 
-  // Establish a connection with Solana Dev Network on page load.
-  async componentDidMount() {
-    let {connection, version} = await establishConnection();
+  async handleEstablishConnection(url) {
+    let {connection, version} = await establishConnection(url);
     this.setState({
       tabValue: this.state.tabValue,
       connection: connection,
@@ -88,32 +89,38 @@ class App extends React.Component {
           Simple Solana Client
         </header>
         <div className="app-contents">
-          <NetworkConnectionStatus
-            connection={this.state.connection}
-            version={this.state.version}
-          />
-          <h2>Each tab exposes different utility methods to interact with the Solana Blockchain:</h2>
-            <Box sx={{ width: '100%' }}>
-              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={this.state.tabValue}
-                  onChange={(evt, newValue) => this.handleTabChange(evt, newValue)}>
-                  <Tab label="Create Account" />
-                  <Tab label="Get Account Information" />
-                  <Tab label="Token Transaction" />
-                </Tabs>
+          {!this.state.connection
+            ? <NetworkSelectionStep handleConnect={(url) => this.handleEstablishConnection(url)}/>
+            :
+            <>
+            <NetworkConnectionStatus
+              connection={this.state.connection}
+              version={this.state.version}
+            />
+            <h2>Each tab exposes different utility methods to interact with the Solana Blockchain:</h2>
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Tabs value={this.state.tabValue}
+                    onChange={(evt, newValue) => this.handleTabChange(evt, newValue)}>
+                    <Tab label="Create Account" />
+                    <Tab label="Get Account Information" />
+                    <Tab label="Token Transaction" />
+                  </Tabs>
+                </Box>
+                <TabPanel value={this.state.tabValue} index={0}>
+                  <GenerateAccountStep
+                    handleCreateAccount={(balance) => this.handleCreateAccount(balance)}
+                    accounts={this.state.accounts}/>
+                </TabPanel>
+                <TabPanel value={this.state.tabValue} index={1}>
+                  <GetAccountInfoStep connection={this.state.connection}/>
+                </TabPanel>
+                <TabPanel value={this.state.tabValue} index={2}>
+                  <TokenTransactionStep connection={this.state.connection}/>
+                </TabPanel>
               </Box>
-              <TabPanel value={this.state.tabValue} index={0}>
-                <GenerateAccountStep
-                  handleCreateAccount={(balance) => this.handleCreateAccount(balance)}
-                  accounts={this.state.accounts}/>
-              </TabPanel>
-              <TabPanel value={this.state.tabValue} index={1}>
-                <GetAccountInfoStep connection={this.state.connection}/>
-              </TabPanel>
-              <TabPanel value={this.state.tabValue} index={2}>
-                <TokenTransactionStep connection={this.state.connection}/>
-              </TabPanel>
-            </Box>
+            </>
+          }
         </div>
       </div>
     );

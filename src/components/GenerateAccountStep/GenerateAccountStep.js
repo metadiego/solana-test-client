@@ -77,7 +77,6 @@ const GenerateAccountStep = ({handleCreateAccount, accounts}) => {
       <div className="accoounts-list">
         {!!accounts && accounts.map(({keypair, balance}) => {
           return <AccountData
-                   key={keypair.publicKey.toString()}
                    publicKey={keypair.publicKey}
                    privateKey={keypair.privateKey}
                    balance={balance}/>
