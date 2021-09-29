@@ -52,23 +52,32 @@ export async function getAccountInfo(connection: Connection, programId: string) 
 export async function transfer(
   connection: solanaWeb3.Connection,
   fromPublicKeyString: string,
-  fromPrivateKey: Uint8Array,
+  fromSecretKey: Uint8Array,
   toPublicKeyString: string,
   lamports) {
   const fromPublicKey = new solanaWeb3.PublicKey(fromPublicKeyString);
   const toPublicKey = new solanaWeb3.PublicKey(toPublicKeyString);
+
   const instructions = solanaWeb3.SystemProgram.transfer({
-    fromPublicKey,
-    toPublicKey,
-    lamports,
+    fromPubkey: fromPublicKey,
+    toPubkey: toPublicKey,
+    lamports: lamports,
   });
+
   const signers = [
     {
       publicKey: fromPublicKey,
-      fromPrivateKey,
+      secretKey: fromSecretKey,
     },
   ];
+
   const transaction = new solanaWeb3.Transaction().add(instructions);
-  const hash = await solanaWeb3.sendAndConfirmTransaction(transaction, signers);
-  return hash;
+
+  const hash = await solanaWeb3.sendAndConfirmTransaction(
+    connection,
+    transaction,
+    signers,
+  );
+
+  console.log(`Transaction complete. Hash: ${hash}`);
 }
