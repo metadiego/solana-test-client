@@ -6,7 +6,6 @@ import {Account, Connection} from '@solana/web3.js';
  * Establish a connection to the cluster
  */
 export async function establishConnection(url): Promise<void> {
-  console.log(url);
   let connection = new solanaWeb3.Connection(url, 'confirmed');
   const version = await connection.getVersion();
   console.log('Connection to cluster established:', version);
